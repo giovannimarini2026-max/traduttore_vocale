@@ -33,8 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _initSpeech() async {
     final available = await _speech.initialize(
-      onError: (error) => setState(() => _errorMessage = error.errorMsg),
+      onError: (error) {
+        if (!mounted) return;
+        setState(() => _errorMessage = error.errorMsg);
+      },
     );
+    if (!mounted) return;
     setState(() => _speechAvailable = available);
   }
 
@@ -42,9 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       await _translationService.ensureModelsDownloaded();
     } catch (e) {
+      if (!mounted) return;
       setState(() => _errorMessage = 'Impossibile scaricare i modelli di traduzione: $e');
     } finally {
-      setState(() => _isPreparingModels = false);
+      if (mounted) setState(() => _isPreparingModels = false);
     }
   }
 
@@ -55,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     if (_isListening) {
       await _speech.stop();
+      if (!mounted) return;
       setState(() => _isListening = false);
       return;
     }
@@ -64,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     await _speech.listen(
       onResult: (result) {
+        if (!mounted) return;
         setState(() => _italianController.text = result.recognizedWords);
         if (result.finalResult) {
           setState(() => _isListening = false);
@@ -82,11 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     try {
       final translated = await _translationService.translate(text);
+      if (!mounted) return;
       setState(() => _englishText = translated);
     } catch (e) {
+      if (!mounted) return;
       setState(() => _errorMessage = 'Traduzione non riuscita: $e');
     } finally {
-      setState(() => _isTranslating = false);
+      if (mounted) setState(() => _isTranslating = false);
     }
   }
 
