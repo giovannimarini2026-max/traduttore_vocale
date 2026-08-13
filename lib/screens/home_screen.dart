@@ -139,17 +139,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             Text('Italiano', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 4),
-            TextField(
-              controller: _italianController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: 'Scrivi una frase o usa il microfono...',
-                border: const OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
-                  color: _isListening ? Colors.red : null,
-                  onPressed: _toggleListening,
-                  tooltip: _isListening ? 'Ferma ascolto' : 'Detta in italiano',
+            Expanded(
+              child: TextField(
+                controller: _italianController,
+                expands: true,
+                maxLines: null,
+                minLines: null,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(
+                  hintText: 'Scrivi una frase o usa il microfono...',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+                    color: _isListening ? Colors.red : null,
+                    onPressed: _toggleListening,
+                    tooltip: _isListening ? 'Ferma ascolto' : 'Detta in italiano',
+                  ),
                 ),
               ),
             ),
@@ -180,15 +185,18 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
             Text('Inglese', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 4),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Theme.of(context).dividerColor),
-                borderRadius: BorderRadius.circular(4),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Theme.of(context).dividerColor),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: SingleChildScrollView(
+                  child: SelectableText(_englishText),
+                ),
               ),
-              constraints: const BoxConstraints(minHeight: 72),
-              child: SelectableText(_englishText),
             ),
             const SizedBox(height: 12),
             ElevatedButton.icon(
