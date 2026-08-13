@@ -104,6 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
     await _tts.speak(_englishText);
   }
 
+  void _clearText() {
+    setState(() {
+      _italianController.clear();
+      _englishText = '';
+      _errorMessage = null;
+    });
+  }
+
   @override
   void dispose() {
     _speech.stop();
@@ -146,16 +154,28 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: _isTranslating || _isPreparingModels ? null : _translate,
-              icon: _isTranslating
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.translate),
-              label: const Text('Traduci'),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _isTranslating || _isPreparingModels ? null : _translate,
+                    icon: _isTranslating
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.translate),
+                    label: const Text('Traduci'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                OutlinedButton.icon(
+                  onPressed: _clearText,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Cancella'),
+                ),
+              ],
             ),
             const SizedBox(height: 24),
             Text('Inglese', style: Theme.of(context).textTheme.labelLarge),
